@@ -3,57 +3,47 @@
 
 </script>
 
-<div class="main-block">
-    <div class="sideBar">
-        <div class="header">
-            <h1>Orden actual</h1>
-        </div>
-        <div class="info-container">
-            <h2 class="info-text">
-                Agrega productos a la orden para ver el total
-            </h2>
-            <ShoppingCart
-                size={80}
-                color="#403936" 
-            />
-        </div>
+<div class="sideBar">
+    <div class="header">
+        <h1>Orden actual</h1>
+    </div>
+    <div class="info-container">
+        <h2 class="info-text">
+            Agrega productos a la orden para ver el total
+        </h2>
+        <ShoppingCart
+            size={80}
+            color="#403936" 
+        />
+    </div>
 
-        <div class="footer">
-            <div class="total-text-container">
-                <p class="total-text">
-                    Total
-                </p>
-
-            </div>
-
-            <div class="total-amount-container">
-                <p class="total-amount">
-                    $0.00
-                </p>
-            </div>
+    <div class="footer">
+        <div class="total-text-container">
+            <p class="total-text">
+                Total
+            </p>
 
         </div>
 
-        <div class="payment-container">
-            <button class="payment-button">
-                Pagar
-            </button>
-
-            <button class="cancel-button">
-                Cancelar
-            </button>
-
+        <div class="total-amount-container">
+            <p class="total-amount">
+                $0.00
+            </p>
         </div>
+    </div>
+    
+    <div class="payment-container">
+        <button class="payment-button">
+            Pagar
+        </button>
 
+        <button class="cancel-button">
+            Cancelar
+        </button>
     </div>
 </div>
 
 <style>
-.main-block {
-    display: flex;
-    min-height: 100vh;
-}
-
 .sideBar {
     margin-left: auto;
     width: 33%;
@@ -61,7 +51,10 @@
     border-radius: 20px 0 0 20px;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    /* estos 3 reemplazan a min-height: 100vh */
+    height: 100vh;
+    position: sticky;
+    top: 0;
 }
 
 .header {

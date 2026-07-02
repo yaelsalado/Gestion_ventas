@@ -1,7 +1,9 @@
 <script>
-	import SideBar from '$lib/components/ui/SideBar.svelte';
+	import ProductsCards from '$lib/components/ui/ProductsCards.svelte';
     import '../app.css';
 </script>
 
+<div>
 
-<SideBar />
+	<ProductsCards />
+</div>
