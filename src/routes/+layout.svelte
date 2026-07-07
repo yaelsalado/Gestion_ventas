@@ -2,8 +2,14 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import SideBar from '$lib/components/ui/SideBar.svelte';
+	import { onMount } from 'svelte';
+	import { cart } from '$lib/cart.svelte';
 
 	let { children } = $props();
+
+	onMount(() => {
+		cart.load();
+	});
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>

@@ -2,6 +2,7 @@
 
     import { onMount } from 'svelte';
     import { supabase } from '$lib/supabaseClient';
+    import { cart } from '$lib/cart.svelte';
 
     interface Product {
         id: number;
@@ -26,6 +27,7 @@
         if (error) {
             console.error('Error al traer los productos:', error);
             errorMsg = 'Error al traer la información de los productos';
+            return;
         }   
         else {
             products = productsData as Product[];
@@ -48,7 +50,7 @@
             <p>{errorMsg}</p>
         {:else}
             {#each products as product (product.id)}
-            <button class="button-product" >
+            <button class="button-product"  onclick={() => cart.addProduct(product)}>
                 <div class="product-card">
                     <img src={product.photo_url} alt={product.product_name} class="product-image" />
                     <div class="product-info">
