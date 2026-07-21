@@ -1,13 +1,18 @@
 <script lang="ts">
 	import ProductsCards from '$lib/components/ui/ProductsCards.svelte';
     import '../app.css';
-    import { Menu } from '@lucide/svelte';
+    import { Menu, Ellipsis } from '@lucide/svelte';
     import LoginCard from '$lib/components/ui/LoginCard.svelte';
     import { onMount } from 'svelte';
 	import { supabase } from '$lib/supabaseClient';
 
     let modalOpen = $state(false);
     let isAdminUser = $state(false);
+    let showButtons = $state(false);
+
+    function toggle(){
+        showButtons = !showButtons;
+    }
 
     function closeModal(){
         modalOpen = false;
@@ -49,10 +54,23 @@
         <ProductsCards />
     </div>
 
-    {#if isAdminUser}
-        <button class="admin-button" onclick={openModal}>
-            <Menu size={25} color="white" strokeWidth={2.5} />
-        </button>
+
+    <button class="show-menu-button" onclick={toggle}>
+        <Ellipsis size={25} color="white" strokeWidth={2.5} />
+    </button>
+
+    {#if showButtons}
+        <div class="menu-buttons">
+            {#if isAdminUser}
+                <button class="admin-button" style="--i: 0" onclick={openModal}>
+                    <Menu size={25} color="white" strokeWidth={2.5}/>
+                </button>
+            {/if}
+
+            <button class="menu-button" style="--i: {isAdminUser ? 1 : 0}">
+                Registrarse
+            </button>
+        </div>
     {/if}
 
     {#if modalOpen}
@@ -69,6 +87,8 @@
 <style>
 
 .page {
+    position: relative;
+
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -78,103 +98,77 @@
     flex: 1;
 }
 
-.admin-button {
-    margin: 1.5rem;
-    width: 2.5rem;
-    height: 2.5rem;
+.menu-buttons {
+    position: fixed;
+    left: 1.5rem;
+    bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .75rem;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.show-menu-button {
+    position: fixed;
+    left: 1.5rem;
+    bottom: 1.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F28C0F;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 21;
+    transition:
+        transform .15s ease,
+        background-color .15s ease;
+}
+
+.show-menu-button:hover {
+    background-color: #ff9d22;
+}
+
+.admin-button,
+.menu-button {
+    position: absolute;
+    pointer-events: auto;
+    left: 0;
+    bottom: 0;
+    --angle: calc(90deg - (var(--i) * 40deg));
+    transform: translate(
+        calc(cos(var(--angle)) * 5rem),
+        calc(-1 * sin(var(--angle)) * 5rem)
+    );
+    width: 3rem;
+    height: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #342E2B;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: transform 150ms ease;
-}
-
-.admin-button:active {
-    transform: scale(0.92); 
-    background-color: #F28C0F;
-}
-
-.overlay {
-    position: fixed;
-    inset: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: rgba(0, 0, 0, .55);
-    backdrop-filter: blur(6px);
-
-    z-index: 100;
-}
-
-.modal {
-    width: min(500px, 90vw);
-
-    background: #201C19;
-    border: 3px solid #342E2B;
-    border-radius: 20px;
-
-    padding: 2rem;
-
     color: white;
-
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-
-    box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
-
-    animation: modalIn .18s ease;
-}
-
-.modal h2 {
-    margin: 0;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.modal button {
-    align-self: flex-end;
-
-    background: #352F2C;
-    color: white;
-
     border: none;
-    border-radius: 12px;
-
-    padding: .8rem 1.5rem;
-
+    border-radius: 50%;
     cursor: pointer;
-
-    transition: background-color .2s ease,
-                transform .15s ease;
+    transition:
+        transform .2s ease,
+        background-color .15s ease;
 }
 
-@media (hover: hover) {
-    .modal button:hover {
-        background: #F28C0F;
-    }
+.admin-button:hover,
+.menu-button:hover {
+    background-color: #403936;
 }
 
-.modal button:active {
-    transform: scale(.96);
-}
-
-@keyframes modalIn {
-    from {
-        opacity: 0;
-        transform: translateY(15px) scale(.96);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+.menu-button {
+    padding: 0 1rem;
+    width: auto;
+    min-width: 3rem;
+    border-radius: 999px;
 }
 
 </style>

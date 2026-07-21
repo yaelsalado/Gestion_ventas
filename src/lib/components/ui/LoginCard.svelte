@@ -83,7 +83,7 @@
             </button>
 
             <button class="link-button" onclick={toggleMode}>
-                ¿No tienes una cuenta? Regístrate
+                ¿No tienes una cuenta? <span>Regístrate</span>
             </button>
         </div>
     
@@ -99,7 +99,7 @@
             </button>
 
             <button class="link-button" onclick={toggleMode}>
-                ¿Ya tienes una cuenta? Inicia sesión
+                ¿Ya tienes una cuenta? <span>Inicia sesión</span>
             </button>
         </div>
     {/if}
@@ -190,5 +190,26 @@
 
 .main-button p {
     margin: 0;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    color: #d0d0d0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    padding: 0;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.link-button span {
+    text-decoration: underline;
+    font-weight: 600;
+    color: white;
+}
+
+.link-button:hover span {
+    color: #F28C0F;
 }
 </style>
