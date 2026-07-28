@@ -1,6 +1,7 @@
 <script>
     import { ShoppingCart } from '@lucide/svelte';
     import { cart } from '$lib/cart.svelte';
+    import PaymentButton from './PaymentButton.svelte';
 </script>
 
 <div class="sideBar">
@@ -39,7 +40,7 @@
     </div>
 
     <div class="payment-container">
-        <button class="payment-button">Pagar</button>
+        <PaymentButton class="payment-wrapper"/>
         <button class="cancel-button" onclick={() => cart.cancelOrder()}>Cancelar</button>
     </div>
 </div>
@@ -119,12 +120,9 @@
     padding: 1rem;
 }
 
-.payment-button {
-    background-color: #F28C0F;
-    padding: 1rem;
+.payment-container :global(.payment-wrapper) {
     flex: 2;
-    border: none;
-    border-radius: 15px;
+    display: flex;
 }
 
 .cancel-button {

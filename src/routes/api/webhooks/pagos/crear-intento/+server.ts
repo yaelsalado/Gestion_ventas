@@ -15,6 +15,8 @@ export async function POST({ request }) {
 		return json({ error: 'Venta no encontrada' }, { status: 404 });
 	}
 
+	const totalVenta = Number(venta.total);
+
 	const clipResponse = await fetch('https://api.payclip.io/f2f/pinpad/v1/payment', {
 		method: 'POST',
 		headers: {
@@ -22,10 +24,10 @@ export async function POST({ request }) {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			amount: venta.total.toFixed(2),
+			amount: totalVenta.toFixed(2),
 			reference: sale_id, 
 			serial_number_pos: CLIP_TERMINAL_SERIAL,
-			webhook_url: 'https://jasmine-woozy-zoologist.ngrok-free.dev'
+			webhook_url: 'https://jasmine-woozy-zoologist.ngrok-free.dev/api/webhooks/clip'
 		})
 	});
 

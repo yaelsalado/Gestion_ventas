@@ -83,8 +83,8 @@
 
     .product-image {
         width: 100%;
-        height: auto;
-    
+        height: 10rem;
+        border-radius: 7px;
     }
 
     .product-info {
