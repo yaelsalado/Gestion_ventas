@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ProductsCards from '$lib/components/ui/ProductsCards.svelte';
+    import SideBar from '$lib/components/ui/SideBar.svelte';
     import '../app.css';
     import { Menu, Ellipsis } from '@lucide/svelte';
     import LoginCard from '$lib/components/ui/LoginCard.svelte';
@@ -54,6 +55,11 @@
         <ProductsCards />
     </div>
 
+    <div class="sidebar-block">
+        <SideBar />
+    </div>
+
+</div>
 
     <button class="show-menu-button" onclick={toggle}>
         <Ellipsis size={25} color="white" strokeWidth={2.5} />
@@ -82,20 +88,26 @@
         </div>
     {/if}
 
-</div>
+
 
 <style>
 
 .page {
-    position: relative;
-
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     min-height: 100vh;
+    gap: 1rem;
 }
 
 .product-block {
+    flex: 2;
+    min-width: 0;
+    overflow-y: auto;
+}
+
+.sidebar-block {
     flex: 1;
+    overflow-x: auto;
 }
 
 .menu-buttons {

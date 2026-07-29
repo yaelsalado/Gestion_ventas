@@ -48,7 +48,7 @@
 <style>
 .sideBar {
     margin-left: auto;
-    width: 33%;
+    width: 100%;
     background-color: #201C19;
     border-radius: 20px 0 0 20px;
     display: flex;
@@ -72,10 +72,12 @@
     flex: 4;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     border: 3px solid #342E2B;
     margin-top: -3px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .info-text {

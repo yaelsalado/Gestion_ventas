@@ -18,7 +18,7 @@
 	<div class="content">
 		{@render children()}
 	</div>
-	<SideBar />
+
 </div>
 
 <style>
