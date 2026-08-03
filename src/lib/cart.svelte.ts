@@ -6,27 +6,38 @@ interface CartItem {
 }
 
 class CartStore {
-    items = $state<CartItem[]>([]);
+    carts = $state<Record<string, CartItem[]>>({
+        caja: []
+    });
 
-    load() {
-        const savedCart = localStorage.getItem('cart');
+    activeContext = $state("caja");
 
-        if (savedCart) {
-            this.items = JSON.parse(savedCart);
-        }
+    get items() {
+        return this.carts[this.activeContext] ?? [];
     }
 
-    private save() {
-        localStorage.setItem('cart', JSON.stringify(this.items));
+    get total() {
+        return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
+
+    setContext(context: string) {
+        this.activeContext = context;
+
+        if (!this.carts[context]) {
+            this.carts[context] = [];
+        }
+
+        this.save();
     }
 
     addProduct(product: { id: number; product_name: string; price: number }) {
-        const existing = this.items.find(item => item.id === product.id);
+        const items = this.carts[this.activeContext] ?? (this.carts[this.activeContext] = []);
+        const existing = items.find(item => item.id === product.id);
 
         if (existing) {
             existing.quantity += 1;
         } else {
-            this.items.push({ ...product, quantity: 1 });
+            items.push({ ...product, quantity: 1 });
         }
 
         this.save();
@@ -42,13 +53,14 @@ class CartStore {
     }
 
     decreaseQuantity(id: number) {
-        const item = this.items.find(item => item.id === id);
+        const items = this.carts[this.activeContext];
+        const item = items?.find(item => item.id === id);
 
         if (item) {
             item.quantity -= 1;
 
             if (item.quantity <= 0) {
-                this.items = this.items.filter(i => i.id !== id);
+                this.carts[this.activeContext] = items.filter(i => i.id !== id);
             }
 
             this.save();
@@ -56,12 +68,20 @@ class CartStore {
     }
 
     cancelOrder() {
-        this.items = [];
-        localStorage.removeItem('cart');
+        this.carts[this.activeContext] = [];
+        this.save();
     }
 
-    get total() {
-        return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    load() {
+        const saved = localStorage.getItem("cart");
+
+        if (saved) {
+            this.carts = JSON.parse(saved);
+        }
+    }
+
+    private save() {
+        localStorage.setItem("cart", JSON.stringify(this.carts));
     }
 }
 

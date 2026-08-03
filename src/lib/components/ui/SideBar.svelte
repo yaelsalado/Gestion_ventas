@@ -65,7 +65,6 @@
     font-size: 1.7rem;
     font-weight: bolder;
     border: 3px solid #342E2B;
-    border-radius: 20px 0 0 0;
 }
 
 .info-container {
