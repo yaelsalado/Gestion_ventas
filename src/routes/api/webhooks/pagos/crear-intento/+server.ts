@@ -40,6 +40,7 @@ export async function POST({ request }) {
 	await supabaseAdmin
 		.from('sale')
 		.update({
+			state: 'abierta',
 			payment_status: 'pendiente_tarjeta',
 			pinpad_request_id: clipData.pinpad_request_id
 		})

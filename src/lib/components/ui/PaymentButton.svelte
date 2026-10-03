@@ -5,12 +5,56 @@
 
     let modalOpen = $state(false);
     let { class: className = '' } = $props();
+    let falloPago = $state(false);
+    let ventaIdActual = $state<number | null>(null);
+    let canalActual: ReturnType<typeof supabase.channel> | null = null;
 
     function toggleModal(){
         modalOpen = !modalOpen;
     }
 
+    function suscribirseVenta(ventaId: number){
+        canalActual = supabase
+            .channel(`sale-${ventaId}`)
+            .on('postgres_changes',{
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'sale',
+                filter: `id=eq.${ventaId}`},
+                (payload) => {
+                    if (payload.new.state === 'pagada'){
+                        cart.cancelOrder();
+                        supabase.removeChannel(canalActual!);
+                    }
+                    else if (payload.new.state === 'cancelada'){
+
+                        falloPago = true;
+                        supabase.removeChannel(canalActual!);
+                    }
+            })
+            .subscribe();
+    }
+
+    async function mandarATerminal(ventaId: number){
+        const res = await fetch('/api/webhooks/pagos/crear-intento', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sale_id: ventaId })
+        });
+
+        if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            console.error('Error al mandar el cobro a la terminal', body);
+            falloPago = true;
+            return;
+        }
+
+        falloPago = false;
+        suscribirseVenta(ventaId);
+    }
+
     async function procesarPago(metodoPago: 'tarjeta' | 'efectivo') {
+        
         const items = cart.items.map(p => ({
             producto_id: p.id,
             cantidad: p.quantity
@@ -29,54 +73,23 @@
 
         console.log('venta procesada con éxito', data);
 
+        ventaIdActual = data;
+
         if (metodoPago === 'tarjeta') {
-            const canal=supabase
-                .channel(`sale-${data}`)
-                .on('postgres_changes', {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'sale',
-                    filter: `id=eq.${data}`},
-                (payload) => {
-                    console.log('🔔 Evento recibido, state =', JSON.stringify(payload.new.state));
-
-                    if (payload.new.state === 'pagada') {
-                        console.log('✅ Entrando al if de pagada, limpiando carrito...');
-                        cart.cancelOrder();
-                        supabase.removeChannel(canal);
-                    }
-                    else if (payload.new.state === 'cancelada') {
-                        console.log('❌ Entrando al if de cancelada');
-                        supabase.removeChannel(canal);
-                    }
-                    else {
-                        console.log('⚠️ Ningún if coincidió, state real fue:', payload.new.state);
-                    }
-                })
-                .subscribe((status)=> {
-                    console.log('📡 Estado de la suscripción:', status);
-                });
-
-            const res = await fetch('/api/webhooks/pagos/crear-intento', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sale_id: data })
-            });
-
-            if (!res.ok) {
-                const body = await res.json().catch(() => ({}));
-                console.error('Error al mandar el cobro a la terminal', body);
-                return;
-            }
-
-
+            await mandarATerminal(data);
         }
-        
+
         else {
             cart.cancelOrder(); 
         }
 
         modalOpen = false;
+    }
+
+    async function reintentaPago(ventaId: number) {
+        if (ventaId) {
+            await mandarATerminal(ventaId);
+        }
     }
 </script>
 
@@ -100,6 +113,16 @@
             </div>
         </div>
     {/if}
+
+    {#if falloPago}
+    <div class="overlay">
+        <div class="modal">
+            <p>El pago no se completó correctamente.</p>
+            <button onclick={() => { if (ventaIdActual) reintentaPago(ventaIdActual); }}>Reintentar</button>
+            <button onclick={() => { falloPago = false; cart.cancelOrder(); }}>Cancelar venta</button>
+        </div>
+    </div>
+{/if}
 </div>
 
 <style>
