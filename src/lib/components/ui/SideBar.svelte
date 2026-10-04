@@ -6,7 +6,7 @@
 
 <div class="sideBar">
     <div class="header">
-        <h1>Orden actual</h1>
+        <h1>{cart.activeContext === 'caja' ? 'Orden actual' : `Mesa ${cart.activeContext.replace('mesa-', '')}`}</h1>
     </div>
     <div class="info-container">
         {#if cart.items.length === 0}

@@ -20,6 +20,11 @@ class CartStore {
         return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     }
 
+    totalDe(context: string) {
+        const items = this.carts[context] ?? [];
+        return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
+
     setContext(context: string) {
         this.activeContext = context;
 

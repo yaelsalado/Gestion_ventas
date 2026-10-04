@@ -48,7 +48,7 @@
 		</div>
 
 		<div class="menu-container">
-			<a href="/">
+			<a href="/" onclick={() => cart.setContext('caja')}>
 				<button class="menu-button">
 					<DollarSign strokeWidth={3}/>
 					<span>Caja</span>
