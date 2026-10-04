@@ -95,4 +95,26 @@
     font-size: 0.9rem;
     font-weight: bolder;
 }
+
+@media (max-width: 600px) {
+    .tables {
+        margin: 6.5rem 1rem 0 1rem;
+    }
+
+    .button-container {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .table-button {
+        padding: 1.5rem 0;
+        font-size: 1rem;
+        gap: 0.5rem;
+    }
+
+    .table-button :global(svg) {
+        width: 48px;
+        height: 48px;
+    }
+}
 </style>

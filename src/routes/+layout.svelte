@@ -60,7 +60,7 @@
 					<span>Mesas</span>
 				</button>
 			</a>
-			{#if rol}
+			{#if rol || !rol}
 				<a href="/admin">
 					<button class="menu-button">
 						<UserStar strokeWidth={3}/>
@@ -133,5 +133,36 @@
 	position: relative;
 }
 
+@media (max-width: 768px) {
+	.layout-container {
+		flex-direction: column;
+	}
+
+	.main {
+		width: 100%;
+		padding-bottom: 42vh;
+	}
+
+	.sidebar-container {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+		flex: none;
+		z-index: 500;
+	}
+}
+
+@media (max-width: 420px) {
+	.menu-container {
+		height: 4.2rem;
+	}
+
+	.menu-button {
+		font-size: 0.7rem;
+		gap: 2px;
+	}
+}
 
 </style>

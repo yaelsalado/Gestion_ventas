@@ -131,7 +131,7 @@
 </script>
 
 <div class={className}>
-    <button type='button' class='payment-button' onclick={toggleModal}>
+    <button type='button' class='payment-button' onclick={toggleModal} disabled = {cart.items.length === 0}>
         Pagar
     </button>
 
@@ -264,6 +264,11 @@
     flex: 1;
 }
 
+.payment-button:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .cash-panel {
     display: flex;
     flex-direction: column;
@@ -383,5 +388,37 @@
     font-size: 2rem;
     font-weight: bolder;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 600px) {
+    .modal {
+        flex-direction: column;
+        min-width: unset;
+        width: 85vw;
+        padding: 1.5rem;
+        gap: 1rem;
+    }
+
+    .payment-option {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        padding: 0.9rem 1rem;
+    }
+
+    .cash-panel {
+        width: 100%;
+    }
+
+    .overlay-title {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .success-banner {
+        padding: 2rem 2.5rem;
+        font-size: 1.4rem;
+        text-align: center;
+    }
 }
 </style>

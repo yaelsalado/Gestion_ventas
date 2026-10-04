@@ -64,7 +64,7 @@
             .from('sale_closing')
             .select('*')
             .order('close_date', { ascending: false })
-            .limit(20);
+            .limit(7);
 
         if (err) {
             console.error('Error al cargar historial', err);
@@ -155,7 +155,7 @@
 
                 {#if resumen.ventas_pendientes > 0}
                     <p class="warning-text">
-                        ⚠ Hay {resumen.ventas_pendientes} venta(s) con pago de tarjeta sin resolver.
+                        Hay {resumen.ventas_pendientes} venta(s) con pago de tarjeta sin resolver.
                         Revísalas antes de cerrar caja, o no se contarán en este corte.
                     </p>
                 {/if}
@@ -179,7 +179,7 @@
                     </div>
                 </div>
 
-                <button class="cerrar-button" onclick={() => (confirmando = true)} disabled={cerrando}>
+                <button class="cerrar-button" onclick={() => (confirmando = true)} disabled={cerrando || resumen.num_sales === 0}>
                     {cerrando ? 'Cerrando...' : 'Cerrar caja'}
                 </button>
             </div>
@@ -202,6 +202,7 @@
             {#if historial.length === 0}
                 <p class="info-text">Todavía no hay cortes registrados.</p>
             {:else}
+                <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
@@ -230,6 +231,7 @@
                                             {:else if (detallePorCierre[cierre.id] ?? []).length === 0}
                                                 <p class="info-text">No se vendió ningún producto en este corte.</p>
                                             {:else}
+                                                <div class="table-scroll">
                                                 <table>
                                                     <thead>
                                                         <tr>
@@ -248,6 +250,7 @@
                                                         {/each}
                                                     </tbody>
                                                 </table>
+                                                </div>
                                             {/if}
                                         </div>
                                     </td>
@@ -256,6 +259,7 @@
                         {/each}
                     </tbody>
                 </table>
+                </div>
             {/if}
         </div>
     {/if}
@@ -380,6 +384,11 @@ h1 {
     color: #F28C0F;
 }
 
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -440,5 +449,24 @@ th {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        margin-top: 5.2rem;
+        padding: 0 1rem 1.5rem;
+    }
+
+    .totales-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .modal {
+        max-width: 90vw;
+    }
+
+    table {
+        min-width: 480px;
+    }
 }
 </style>

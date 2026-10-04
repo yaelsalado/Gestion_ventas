@@ -99,4 +99,24 @@
         padding: 0;
         cursor: pointer;
     }
+
+    @media (max-width: 600px) {
+        .products-container {
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .product-image {
+            height: 7rem;
+        }
+
+        .product-name {
+            font-size: 0.95rem;
+        }
+
+        .product-price {
+            font-size: 0.9rem;
+        }
+    }
 </style>

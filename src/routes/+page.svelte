@@ -33,5 +33,11 @@
     margin-top: 6rem;
 }
 
+@media (max-width: 420px) {
+    .product-block {
+        margin-top: 5.2rem;
+    }
+}
+
 
 </style>

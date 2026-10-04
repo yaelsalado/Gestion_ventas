@@ -6,7 +6,7 @@
 
 <div class="sideBar">
     <div class="header">
-        <h1>{cart.activeContext === 'caja' ? 'Orden actual' : `Mesa ${cart.activeContext.replace('mesa-', '')}`}</h1>
+        <h1>{cart.activeContext === 'caja' ? 'Caja' : `Mesa ${cart.activeContext.replace('mesa-', '')}`}</h1>
     </div>
     <div class="info-container">
         {#if cart.items.length === 0}
@@ -162,5 +162,28 @@
     cursor: pointer;
     font-weight: bolder;
     font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .sideBar {
+        position: static;
+        height: auto;
+        max-height: 42vh;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    .info-container {
+        min-height: 0;
+    }
+
+    .header {
+        font-size: 1.3rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .payment-container {
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    }
 }
 </style>
