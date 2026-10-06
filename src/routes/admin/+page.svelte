@@ -37,6 +37,7 @@
     let detalleAbiertoId = $state<number | null>(null);
     let cargandoDetalleId = $state<number | null>(null);
     let detallePorCierre = $state<Record<number, DetalleItem[]>>({});
+    
 
     function formatMoney(n: number) {
         return `$${Number(n).toFixed(2)}`;

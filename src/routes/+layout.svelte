@@ -2,82 +2,64 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import SideBar from '$lib/components/ui/SideBar.svelte';
+	import LoginCard from '$lib/components/ui/LoginCard.svelte';
 	import { onMount } from 'svelte';
 	import { cart } from '$lib/cart.svelte';
-	import { supabase } from '$lib/supabaseClient';
 	import { DollarSign, HandPlatter, UserStar } from '@lucide/svelte'
 
-
-	let { children } = $props();
-	let rol = $state(false);
-
-	async function traerRol() {
-		const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-		if (userError || !user){
-			console.error(userError);
-			return;
-		}
-		const { data, error } = await supabase
-			.from("profiles")
-			.select("is_admin")
-			.eq("id", user.id)
-			.single();
-
-			if (error || !data){
-				console.error(error)
-				return;
-			}
-
-			rol = data.is_admin; 
-	}
+	let { children, data } = $props();
 
 	onMount( async () => {
 		cart.load();
-		await traerRol();
 	});
+
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<div class="layout-container">
+{#if data.user}
+	<div class="layout-container">
 
-	<div class="main">
-		<div class="content">
-			{@render children()}
-		</div>
+		<div class="main">
+			<div class="content">
+				{@render children()}
+			</div>
 
-		<div class="menu-container">
-			<a href="/" onclick={() => cart.setContext('caja')}>
-				<button class="menu-button">
-					<DollarSign strokeWidth={3}/>
-					<span>Caja</span>
-				</button>
-			</a>
-			<a href="/mesas">
-				<button class="menu-button">
-					<HandPlatter strokeWidth={3}/>
-					<span>Mesas</span>
-				</button>
-			</a>
-			{#if rol || !rol}
-				<a href="/admin">
+			<div class="menu-container">
+				<a href="/" onclick={() => cart.setContext('caja')}>
 					<button class="menu-button">
-						<UserStar strokeWidth={3}/>
-						<span>Admin</span>
+						<DollarSign strokeWidth={3}/>
+						<span>Caja</span>
 					</button>
 				</a>
-			{/if}			
+				<a href="/mesas">
+					<button class="menu-button">
+						<HandPlatter strokeWidth={3}/>
+						<span>Mesas</span>
+					</button>
+				</a>
 
+				{#if data.isAdmin}
+					<a href="/admin">
+						<button class="menu-button">
+							<UserStar strokeWidth={3}/>
+							<span>Admin</span>
+						</button>
+					</a>
+				{/if}
+
+			</div>
+		</div>
+		<div class="sidebar-container">
+				<SideBar/>
 		</div>
 	</div>
-	<div class="sidebar-container">
-			<SideBar/>
-	</div>
-</div>
+{:else}
+	<LoginCard />
+{/if}
 
 <style>
-	
+
 .layout-container {
 	display: flex;
 

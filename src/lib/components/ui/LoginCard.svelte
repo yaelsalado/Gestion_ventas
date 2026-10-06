@@ -1,5 +1,6 @@
 <script>
     import { supabase } from '$lib/supabaseClient';
+    import { invalidateAll } from '$app/navigation';
 
     let username = $state('');
 	let email = $state('');
@@ -65,7 +66,7 @@
 
         else {
             console.log('Inicio de sesión exitoso');
-            alert('Inicio de sesión exitoso.');
+            await invalidateAll();
         }
     }
 </script>
